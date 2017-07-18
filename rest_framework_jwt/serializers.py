@@ -50,15 +50,13 @@ class JSONWebTokenSerializer(Serializer):
             user = authenticate(**credentials)
 
             if user:
-                if not user.is_active:
-                    msg = _('User account is disabled.')
-                    raise serializers.ValidationError(msg)
-
+                msg = _('User account is disabled.')
                 payload = jwt_payload_handler(user)
 
                 return {
                     'token': jwt_encode_handler(payload),
-                    'user': user
+                    'user': user,
+                    'msg': msg
                 }
             else:
                 msg = _('Unable to log in with provided credentials.')
@@ -105,10 +103,6 @@ class VerificationBaseSerializer(Serializer):
             user = User.objects.get_by_natural_key(username)
         except User.DoesNotExist:
             msg = _("User doesn't exist.")
-            raise serializers.ValidationError(msg)
-
-        if not user.is_active:
-            msg = _('User account is disabled.')
             raise serializers.ValidationError(msg)
 
         return user
