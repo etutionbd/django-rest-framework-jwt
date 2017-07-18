@@ -61,10 +61,6 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
             msg = _('Invalid signature.')
             raise exceptions.AuthenticationFailed(msg)
 
-        if not user.is_active:
-            msg = _('User account is disabled.')
-            raise exceptions.AuthenticationFailed(msg)
-
         return user
 
 
